@@ -4,6 +4,8 @@ import YTSerach from 'youtube-api-search';
 
 import SearchBar from './components/search-bar';
 import VideoList from './components/video-list';
+import VideoDetail from './components/video-detail';
+
 
 const API_KEY = 'AIzaSyC3TZ6d3pKea0X31l4U3u2u_OlW6vxHvds';
 
@@ -12,16 +14,21 @@ class App extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { videos: [] };
+        this.state = { 
+            videos: [],
+            selectedVideo: null
+        };
 
         this.searchVideo = this.searchVideo.bind(this);
-        this.searchVideo('surfboards');
+        this.searchVideo('');
     }
 
     searchVideo(term) {
         YTSerach({ key: API_KEY, term }, (videos) => {
-            this.setState({ videos });
-            console.log(videos);
+            this.setState({ 
+                videos: videos,
+                selectedVideo: videos[0]
+             });
         });
     }
 
@@ -29,7 +36,10 @@ class App extends Component {
         return (
             <div>
                 <SearchBar searchVideo={this.searchVideo} />
-                <VideoList videos={this.state.videos} />
+                <VideoDetail video={this.state.selectedVideo} />
+                <VideoList 
+                    videos={this.state.videos} 
+                    onVideoSelect={selectedVideo => this.setState({selectedVideo})} />
             </div>
         );
     }
