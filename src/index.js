@@ -14,32 +14,33 @@ class App extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { 
+        this.state = {
             videos: [],
             selectedVideo: null
-        };
+        }
+
+        this.searchVideo('');
 
         this.searchVideo = this.searchVideo.bind(this);
-        this.searchVideo('');
+        this.onVideoSelect = this.onVideoSelect.bind(this);
     }
 
     searchVideo(term) {
-        YTSerach({ key: API_KEY, term }, (videos) => {
-            this.setState({ 
-                videos: videos,
-                selectedVideo: videos[0]
-             });
+        YTSerach({key: API_KEY, term}, videos => {
+            this.setState({videos});
         });
+    }
+
+    onVideoSelect(selectedVideo) {
+        this.setState({selectedVideo});
     }
 
     render() {
         return (
             <div>
                 <SearchBar searchVideo={this.searchVideo} />
-                <VideoDetail video={this.state.selectedVideo} />
-                <VideoList 
-                    videos={this.state.videos} 
-                    onVideoSelect={selectedVideo => this.setState({selectedVideo})} />
+                {this.state.videos.length}
+                <VideoList videos={this.state.videos} onVideoSelect={this.onVideoSelect} />
             </div>
         );
     }
